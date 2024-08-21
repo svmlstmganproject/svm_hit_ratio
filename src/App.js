@@ -1,25 +1,54 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+const HitRatioData = () => {
+    const [data, setData] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-export default App;
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get('https://node-server-svm.onrender.com/getHitRatioPiwData');  // Updated endpoint
+                setData(response.data);
+                setLoading(false);
+            } catch (error) {
+                setError(error);
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error: {error.message}</p>;
+
+    return (
+        <div>
+            <p>Hit Ratio Data</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Hit Ratio CI Of 10 (Window China)</th>
+                        <th>Hit Ratio DI Of 10 (Window China)</th>
+                        <th>Hit Ratio CI Of 30 (Window China)</th>
+                        <th>Hit Ratio DI Of 30 (Window China)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {data.map(item => (
+                        <tr key={item._id}>
+                            <td>{item.HitRatioCIOf10WindowChina}</td>
+                            <td>{item.HitRatioDIOf10WindowChina}</td>
+                            <td>{item.HitRatioCIOf30WindowChina}</td>
+                            <td>{item.HitRatioDIOf30WindowChina}</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </div>
+    );
+};
+
+export default HitRatioData;
