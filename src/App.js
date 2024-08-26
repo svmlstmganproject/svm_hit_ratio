@@ -9,7 +9,7 @@ const HitRatioData = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get('https://node-server-svm.onrender.com/getHitRatioPiwData');  // Updated endpoint
+                const response = await axios.get('https://svm-server1.onrender.com/getHitRatioPiwData');  // Updated endpoint
                 setData(response.data);
                 setLoading(false);
             } catch (error) {
